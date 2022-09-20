@@ -6,13 +6,13 @@
 # We assume we run the script from the Hymenoptera_Bayesian-analysis folder
 
 #time_tree_file="data/time.tree" #Only to check the accuracy of the analysis in the tutorial
-#time_tree_file="/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_10.fasta.tree"
+#time_tree_file="/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_10.fasta.tree"
 
 
-time_tree_file="Dating_analysis_speed2/script_speed/TimeTree_mcmc_10.tree"
+time_tree_file="Dating_analysis2/script/TimeTree_mcmc_10.tree"
 
-mean_tree_file="Dating_analysis_speed2/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_meanBL.nex"
-var_tree_file="Dating_analysis_speed2/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_varBL.nex"
+mean_tree_file="Dating_analysis2/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_meanBL.nex"
+var_tree_file="Dating_analysis2/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_varBL.nex"
 out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
 
 ################################################################################
@@ -319,14 +319,14 @@ if (debug == true) {
   print(ages_psi)
 }
 
-trees_base_name = "Dating_analysis_speed2/output_speed/" + out_bn
+trees_base_name = "Dating_analysis2/output/" + out_bn
 trees_file_name = trees_base_name + ".trees"
 map_file_name = trees_base_name + "_map.tree"
-checkpoint_file_name = "Dating_analysis_speed2/output_speed/checkpoint_" + out_bn
+checkpoint_file_name = "Dating_analysis2/output/checkpoint_" + out_bn
 
 
-monitors.append(mnModel(filename="Dating_analysis_speed2/output_speed/"+out_bn+".log",printgen=10, separator = TAB))
-monitors.append(mnStochasticVariable(filename="Dating_analysis_speed2/output_speed/"+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnModel(filename="Dating_analysis2/output/"+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename="Dating_analysis2/output/"+out_bn+"_Stoch.log",printgen=10))
 monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
 
 # Add some random age monitors.
