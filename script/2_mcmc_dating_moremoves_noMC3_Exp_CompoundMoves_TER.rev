@@ -1,0 +1,352 @@
+#Dating Using Calibrations and Constraints
+
+################################################################################
+# Files.
+
+# We assume we run the script from the Hymenoptera_Bayesian-analysis folder
+
+#time_tree_file="data/time.tree" #Only to check the accuracy of the analysis in the tutorial
+#time_tree_file="/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_10.fasta.tree"
+
+
+time_tree_file="Dating_analysis_speed2/script_speed/TimeTree_mcmc_10.tree"
+
+mean_tree_file="Dating_analysis_speed2/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_meanBL.nex"
+var_tree_file="Dating_analysis_speed2/output_speed/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_varBL.nex"
+out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
+
+################################################################################
+# Options.
+
+# Show debug output?
+debug = false
+# Use relative constraints?
+constrain = false
+# Length of Markov chain.
+mcmc_length = 20000
+mcmc_burnin = 2000
+# The posterior branch length distribution of some branches of the first run has
+# zero variance. In this case, set the variance to the following value.
+var_min = 1e-6
+
+
+# Calibrate root
+root_time_real~ dnUniform(300, 412)
+
+################################################################################
+# Variables.
+moves = VectorMoves()
+monitors = VectorMonitors()
+tree <- readTrees(time_tree_file)[1]
+n_species <- tree.ntips()
+n_branches <- 2*n_species - 2
+taxa <- tree.taxa()
+# Yule Tree Model
+
+################################################################################
+# Tree model.
+
+#birth_rate ~ dnExp(1)
+#moves.append(mvScale(birth_rate, lambda=1.0, tune=true, weight=3.0))
+
+
+
+##Diversification
+#Diversification (d) is the speciation rate (λ) minus the extinction rate (μ): d=λ−μ
+
+diversification ~ dnExponential(10.0)
+moves.append( mvScaleBactrian(diversification, lambda=1.0, tune=true, weight=2.0))
+moves.append( mvSlideBactrian(diversification, sigma=1.0,tune=true,weight=2.0))
+
+##Turnover
+#Turnover is: r=μ/λ
+turnover ~ dnBeta(2.0, 2.0)
+moves.append( mvSlideBactrian(turnover, sigma=1.0,tune=true,weight=2.0))
+moves.append( mvScaleBactrian(turnover, lambda=1.0, tune=true, weight=2.0))
+
+##Deterministic Nodes for Birth and Death Rates
+#The birth rate and death rate are deterministic functions of the diversification and turnover.
+# First, create a deterministic node for 1−r, which is the denominator for each formula.
+
+denom := abs(1.0 - turnover)
+
+#Now, the rates will both be positive real numbers that are variable transformations of the stochastic variables.
+birth_rate := diversification / denom
+death_rate := (turnover * diversification) / denom
+
+
+##Sampling Probability
+#Fix the probability of sampling to a known value. Since there are approximately 147 described caniform species, we will create a constant node for this parameter that is equal to 10/147.
+
+rho <- 3.306667e-07
+
+if (!constrain) psi ~ dnBDP(lambda=birth_rate, mu=death_rate, rho=rho, rootAge=root_time_real, samplingStrategy="uniform", condition="nTaxa", taxa=taxa)
+if (constrain) psi ~  dnConstrainedNodeOrder(dnBDP(lambda=birth_rate, mu=0.0, rho=1.0, rootAge=root_time, samplingStrategy="uniform", condition="survival", taxa=taxa), constraints)
+
+#Fix topology
+psi.setValue(tree)
+if (debug == true) {
+  print("The original time tree:")
+  print(tree)
+  print("The tree used in the Markov chain:")
+  print(psi)
+}
+
+moves.append( mvNodeTimeSlideUniform(psi, weight=0.5*n_branches) )
+moves.append( mvSlideBactrian(root_time_real, sigma=2.0, tune=true, weight=10.0) )
+moves.append( mvScaleBactrian(root_time_real, lambda=2.0, tune=true, weight=10.0) )
+moves.append( mvTreeScale(tree=psi, rootAge=root_time_real, delta=1.0, tune=true, weight=3.0) )
+
+
+moves.append( mvLayeredScaleProposal(tree=psi, lambda=0.1, tune=true, weight=0.5*n_branches))
+moves.append( mvSubtreeScale(psi, weight=0.5*n_branches) )
+moves.append( mvRootTimeSlideUniform(psi, root_time_real, weight=5.0) )
+moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches)) 
+
+## Adding Node Calibrations
+
+################################################################################
+# Node calibrations provide information about the ages of the MRCA.
+
+# The MRCAs of the following clades are calibrated.
+#clade_0 = clade("T1","T2")
+#clade_1 = clade("T14","T15")
+clade_Bombus <- clade("Bombus_impatiens","Bombus_terrestris")
+clade_Chalcidoidea <- clade("Trichogramma_brassicae","Trichogramma_pretiosum","Anagyrus_pseudococci","Leptomastidea_abnormis","Copidosoma_floridanum","Copidosoma_sp","Encarsia_formosa","Eretmocerus_eremicus","Ormyrus_nitidulus","Ormyrus_pomaceus","Torymus_auratus","Torymus_geranii","Torymus_flavipes","Torymus_sinensis","Ceratosolen_corneri","Ceratosolen_marchali","Ceratosolen_solmsi","Megastigmus_dorsalis","Megastigmus_stigmatizans","Eurytoma_adleriae","Eurytoma_brunniventris","Eupelmus_annulatus","Eupelmus_azureus","Eupelmus_kiefferi","Eupelmus_urozonus","Cecidostiba_fungosa","Cecidostiba_semifascia","Nasonia_giraulti","Nasonia_longicornis","Nasonia_vitripennis","Trichomalopsis_sarcophagae")
+clade_Braconidae <- clade("Aphidius_colemani","Diachasma_alloeum","Psyttalia_concolor","Psyttalia_lounsbury","Fopius_arisanus","Cotesia_vestalis","Microplitis_demolitor","Macrocentrus_cingulum","Meteorus_cinctellus","Meteorus_colon_M","Meteorus_colon_F")
+clade_Cynipoidea <- clade("Ganaspis_brasiliensis","Ganaspis_ganaspis","Leptopilina_boulardi","Leptopilina_clavipes","Leptopilina_heterotoma","Synergus_japonicus","Synergus_umbraculus")
+#tmrca_clade_Cynipoidea := tmrca(timetree, clade_Cynipoidea)
+clade_Hymenoptera <- clade("Athalia_rosae","Neodiprion_lecontei","Neodiprion_pinetum","Cephus_cinctus","Orussus_abietinus","Ganaspis_brasiliensis","Ganaspis_ganaspis","Leptopilina_boulardi","Leptopilina_clavipes","Leptopilina_heterotoma","Synergus_japonicus","Synergus_umbraculus","Platygaster_equestris","Platygaster_orseoliae","Trissolcus_brochymenae","Trissolcus_japonicus","Trichopria_sp_970989","Trichogramma_brassicae","Trichogramma_pretiosum","Anagyrus_pseudococci","Leptomastidea_abnormis","Copidosoma_floridanum","Copidosoma_sp","Encarsia_formosa","Eretmocerus_eremicus","Ormyrus_nitidulus","Ormyrus_pomaceus","Torymus_auratus","Torymus_geranii","Torymus_flavipes","Torymus_sinensis","Ceratosolen_corneri","Ceratosolen_marchali","Ceratosolen_solmsi","Megastigmus_dorsalis","Megastigmus_stigmatizans","Eurytoma_adleriae","Eurytoma_brunniventris","Eupelmus_annulatus","Eupelmus_azureus","Eupelmus_kiefferi","Eupelmus_urozonus","Cecidostiba_fungosa","Cecidostiba_semifascia","Nasonia_giraulti","Nasonia_longicornis","Nasonia_vitripennis","Trichomalopsis_sarcophagae","Aphidius_colemani","Diachasma_alloeum","Psyttalia_concolor","Psyttalia_lounsbury","Fopius_arisanus","Cotesia_vestalis","Microplitis_demolitor","Macrocentrus_cingulum","Meteorus_cinctellus","Meteorus_colon_M","Meteorus_colon_F","Campopleginae","Venturia_canescens","Ophioninae_A","Ophioninae_B","Cremastinae_A","Cremastinae_B","Tryphoninae_A","Tryphoninae_B","Ichneumoninae_A","Ichneumoninae_B","Goniozus_legneri","Polistes_canadensis","Polistes_dominula","Apis_cerana","Apis_mellifera","Apis_dorsata","Apis_florea","Bombus_impatiens","Bombus_terrestris","Lepidotrigona_ventralis","Melipona_quadrifasciata","Eufriesea_mexicana","Euglossa_dilemma","Ceratina_australensis","Ceratina_calcarata","Habropoda_laboriosa","Megachile_rotundata","Osmia_bicornis","Dufourea_novaeangliae","Lasioglossum_albipes","Nomia_melanderi","Dinoponera_quadriceps","Harpegnathos_saltator","Ooceraea_biroi","Linepithema_humile","Pseudomyrmex_gracilis","Camponotus_floridanus","Cataglyphis_hispanica","Cataglyphis_niger","Formica_exsecta","Lasius_niger","Nylanderia_fulva","Pogonomyrmex_barbatus","Aphaenogaster_ashmeadi","Aphaenogaster_floridana","Aphaenogaster_fulva","Aphaenogaster_picea","Aphaenogaster_rudis","Aphaenogaster_miamiana","Crematogaster_levior","Temnothorax_curvispinosus","Temnothorax_longispinosus","Vollenhovia_emeryi","Monomorium_pharaonis","Solenopsis_fugax","Solenopsis_invicta","Wasmannia_auropunctata","Cyphomyrmex_costatus","Trachymyrmex_zeteki","Trachymyrmex_cornetzi","Trachymyrmex_septentrionalis","Acromyrmex_echinatior","Atta_cephalotes","Atta_colombica","Atta_texana")
+#tmrca_clade_Hymenoptera := tmrca(timetree, clade_Hymenoptera)
+
+# Clade Bombus
+tmrca_clade_Bombus := tmrca(psi, clade_Bombus)
+obs_age_clade_Bombus~ dnExponential(1.0, offset = - tmrca_clade_Bombus)
+obs_age_clade_Bombus.clamp(-17.0)
+
+# Clade Chaclidoidea
+tmrca_clade_Chalcidoidea := tmrca(psi, clade_Chalcidoidea)
+obs_age_clade_Chalcidoidea~ dnExponential(1.0, offset = - tmrca_clade_Chalcidoidea)
+obs_age_clade_Chalcidoidea.clamp(-130.0)
+
+# Clade Braconidae
+tmrca_clade_Braconidae := tmrca(psi, clade_Braconidae)
+obs_age_clade_Braconidae~ dnExponential(1.0, offset = - tmrca_clade_Braconidae)
+obs_age_clade_Braconidae.clamp(-99.0)
+
+# Clade Cynipoidea
+tmrca_clade_Cynipoidea := tmrca(psi, clade_Cynipoidea)
+obs_age_clade_Cynipoidea~ dnExponential(1.0, offset = - tmrca_clade_Cynipoidea)
+obs_age_clade_Cynipoidea.clamp(-78.5)
+
+# Clade Hymenoptera
+tmrca_clade_Hymenoptera := tmrca(psi, clade_Hymenoptera)
+obs_age_clade_Hymenoptera~ dnExponential(1.0, offset = - tmrca_clade_Hymenoptera)
+obs_age_clade_Hymenoptera.clamp(-226.4)
+
+#####################################
+## Posterior Means and Variances####
+###################################
+
+#mean_tree <- readTrees(mean_tree_file)[1]
+#var_tree <- readTrees(var_tree_file)[1]
+mean_tree <- readTrees(mean_tree_file, treetype="clock")[1]
+var_tree <- readTrees(var_tree_file, treetype="clock")[1]
+
+#Reroot the timetree
+
+# Reroot and make bifurcating.
+rootId <- tree.getRootIndex()
+outgroup <- tree.getDescendantTaxa(rootId)
+
+print("teeeeeessssssttttttttt")
+mean_tree.reroot(clade=clade(outgroup),makeBifurcating=TRUE)
+var_tree.reroot(clade=clade(outgroup),makeBifurcating=TRUE)
+
+
+print(mean_tree)
+# Renumber nodes.
+mean_tree.renumberNodes(tree)
+var_tree.renumberNodes(tree)
+
+print(mean_tree)
+
+writeNexus(filename="mean_tree_tmp.nex", mean_tree)
+writeNexus(filename="var_tree_tmp.nex", var_tree)
+
+mean_tree <- readTrees("mean_tree_tmp.nex")[1]
+var_tree <- readTrees("var_tree_tmp.nex")[1]
+
+print(mean_tree)
+
+# Get indices of left child and right child of root.
+i_left <- tree.child(tree.nnodes(),1)
+i_right <- tree.child(tree.nnodes(),2)
+
+print(i_left)
+print(i_right)
+
+# Get posterior means and variances of all branches except the branches leading
+# to the root.
+for(i in 1:n_branches) {
+  if(i != i_left && i != i_right) {
+    posterior_mean_bl[i] <- mean_tree.branchLength(i)
+    posterior_var_bl[i] := var_tree.branchLength(i)
+    if (posterior_var_bl[i]<var_min) posterior_var_bl[i]:=var_min
+    print(i + " : " + posterior_mean_bl[i])
+  }
+}
+
+# Get the index of the root in the time tree.
+if (i_left<i_right)  i_root <- i_left
+if (i_left>=i_right) i_root <- i_right
+
+# Get the mean and variance of the branch containing the root.
+posterior_mean_bl_root <- mean_tree.branchLength(i_root)
+posterior_var_bl_root <- var_tree.branchLength(i_root)
+if (posterior_var_bl_root<var_min) posterior_var_bl_root:=var_min
+
+############################################
+#### Relaxed Molecular Clock Model: UExp ###
+############################################
+
+mean_tree_root_age := mean_tree.rootAge()
+
+initial_rate_value <- mean_tree_root_age/tree.rootAge()
+print("mean_tree_root_age/tree.rootAge(): " + initial_rate_value)
+
+global_rate_mean ~ dnExp(1/initial_rate_value)
+global_rate_mean.setValue( initial_rate_value );
+
+
+moves.append( mvScaleBactrian(global_rate_mean, lambda=0.5, weight=10.0) )
+moves.append( mvSlideBactrian(global_rate_mean, sigma=2.0, tune=true, weight=10.0) )
+
+# Use an exponential distribution on rates.
+for (i in n_branches:1) {
+  branch_rates[i] ~ dnExp(1/global_rate_mean)
+  # Exclude the branches leading to the root (see above).
+  if(i != i_left && i != i_right) {
+    branch_rates[i].setValue(posterior_mean_bl[i]/psi.branchLength(i)/global_rate_mean)
+  } else {
+    # And set them to half of the branch length in the unrooted tree.
+    branch_rates[i].setValue(posterior_mean_bl_root/2/psi.branchLength(i)/global_rate_mean)
+  }
+  moves.append(mvScaleBactrian(branch_rates[i], lambda=0.5, weight=1.0,tune=true))
+}
+
+
+# Some compound moves
+up_down_move = mvUpDownScale(weight=50.0)
+up_down_move.addVariable(branch_rates,TRUE)
+up_down_move.addVariable(global_rate_mean,FALSE)
+moves.append( up_down_move )
+
+up_down_move2 = mvUpDownScale(weight=50.0, tuneTarget=0.1)
+up_down_move2.addVariable(branch_rates,TRUE)
+up_down_move2.addVariable(global_rate_mean,FALSE)
+moves.append( up_down_move2 )
+
+up_down_move_tree = mvUpDownScale(weight=50.0)
+up_down_move_tree.addVariable(psi,TRUE)
+up_down_move_tree.addVariable(root_time_real,TRUE)
+up_down_move_tree.addVariable(global_rate_mean,TRUE)
+moves.append( up_down_move_tree )
+
+up_down_move_tree2 = mvUpDownScale(weight=50.0, tuneTarget=0.1)
+up_down_move_tree2.addVariable(psi,TRUE)
+up_down_move_tree2.addVariable(root_time_real,TRUE)
+up_down_move_tree2.addVariable(global_rate_mean,TRUE)
+moves.append( up_down_move_tree2 )
+
+
+up_down_move_big = mvUpDownScale(weight=50.0, tuneTarget=0.1)
+up_down_move_big.addVariable(psi,TRUE)
+up_down_move_big.addVariable(root_time_real,TRUE)
+up_down_move_big.addVariable(global_rate_mean,TRUE)
+up_down_move_big.addVariable(branch_rates,FALSE)
+moves.append( up_down_move_big )
+
+
+## DOES NOT WORK UNFORTUNATELY
+#up_down_move_217 = mvUpDownScale(weight=50.0, tuneTarget=0.1)
+#up_down_move_217.addVariable(psi.nodeAge(217),TRUE)
+#up_down_move_217.addVariable(branch_rates[217,FALSE)
+#up_down_move_217.addVariable(branch_rates[216,TRUE)
+#up_down_move_217.addVariable(branch_rates[213,TRUE)
+#moves.append( up_down_move_217 )
+
+
+
+moves.append( mvVectorScale(x=branch_rates, tune=true, weight=10) )
+mean_rt := mean(branch_rates)
+
+
+#################
+## Likelihood ###
+#################
+
+mean_bl[i] := psi.branchLength(i)*branch_rates[i]
+
+for(i in 1:n_branches) {
+  if(i != i_left && i != i_right) {
+    mean_bl[i] := psi.branchLength(i)*branch_rates[i]
+    bls[i] ~ dnNormal(mean_bl[i] ,sqrt(posterior_var_bl[i]))
+    bls[i].clamp(posterior_mean_bl[i])
+  }
+}
+
+# See above.
+mean_bl_root := psi.branchLength(i_left)*branch_rates[i_left] + psi.branchLength(i_right)*branch_rates[i_right]
+bls[i_root] ~ dnNormal(mean_bl_root, sqrt(posterior_var_bl_root))
+bls[i_root].clamp(posterior_mean_bl_root)
+
+
+
+#######################
+## Monitors and MCMC ##
+#######################
+
+for(i in 1:n_branches)
+{
+  ages_psi[i] := psi.nodeAge(i)
+  ages_true[i] := tree.nodeAge(i)
+}
+if (debug == true) {
+  print("True node ages:")
+  print(ages_true)
+  print("Node ages of state of Markov chain:")
+  print(ages_psi)
+}
+
+trees_base_name = "Dating_analysis_speed2/output_speed/" + out_bn
+trees_file_name = trees_base_name + ".trees"
+map_file_name = trees_base_name + "_map.tree"
+checkpoint_file_name = "Dating_analysis_speed2/output_speed/checkpoint_" + out_bn
+
+
+monitors.append(mnModel(filename="Dating_analysis_speed2/output_speed/"+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename="Dating_analysis_speed2/output_speed/"+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
+
+# Add some random age monitors.
+monitors.append(mnScreen(printgen=10, root_time_real))
+
+# mymodel = model(branch_rates)
+mymodel = model(bls)
+#mymcmc = mcmc(mymodel, monitors, moves, nruns=2, tuneHeat=TRUE,combine="mixed")
+mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="mixed")
+mymcmc.burnin(generations=mcmc_burnin,tuningInterval=mcmc_burnin/20)
+mymcmc.operatorSummary()
+mymcmc.run(generation=mcmc_length, checkpointFile=checkpoint_file_name,checkpointInterval=10)
+mymcmc.operatorSummary()
+
+# Building the MAP tree
+treetrace = readTreeTrace(trees_file_name, treetype="clock", burnin=0.25,nruns=2,thinning=100)
+map_tree = mapTree(treetrace, map_file_name)
+
+
+################
+## To continue
+# mymcmc.run(generation=mcmc_length,checkpointFile=checkpoint_file_name,checkpointInterval=10)
+# mymcmc.operatorSummary()
