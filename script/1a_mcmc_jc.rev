@@ -65,8 +65,8 @@ seq.clamp(data)
 
 # Monitors.
 monitors.append( mnScreen(TL, printgen=100) )
-monitors.append( mnFile(psi, filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output_speed/" + aln_file+".trees", printgen=10) )
-monitors.append( mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output_speed/" + aln_file+".log", printgen=10) )
+monitors.append( mnFile(psi, filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/" + aln_file+".trees", printgen=10) )
+monitors.append( mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/" + aln_file+".log", printgen=10) )
 
 print(data.names())
 print(psi.names())
@@ -74,12 +74,12 @@ print(psi.names())
 mymodel = model(psi)
 mymcmc = mcmc(mymodel, moves, monitors,nruns=3)
 mymcmc.burnin(generations=mcmc_burnin,tuningInterval=200)
-mymcmc.run(generations = num_generations,checkpointFile="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/scripts_speed/checkpoint_1A_20000.state", checkpointInterval=10)
+mymcmc.run(generations = num_generations,checkpointFile="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/scripts/checkpoint_1A_20000.state", checkpointInterval=10)
 
 ################################################################################
 # Post processing.
 
-treetrace = readTreeTrace("/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output_speed/"+ aln_file+".trees", treetype="non-clock",nruns=3,burnin=0.25)
-map_tree = mapTree(treetrace, "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output_speed/" + aln_file + ".tree")
+treetrace = readTreeTrace("/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+ aln_file+".trees", treetype="non-clock",nruns=3,burnin=0.25)
+map_tree = mapTree(treetrace, "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/" + aln_file + ".tree")
 
 q()
