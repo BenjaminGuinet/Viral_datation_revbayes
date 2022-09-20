@@ -31,7 +31,7 @@ var_min = 1e-6
 
 
 # Calibrate root
-root_time_real~ dnUniform(300, 412)
+root_time_real~ dnUniform(350, 550)
 
 ################################################################################
 # Variables.
