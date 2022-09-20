@@ -109,40 +109,19 @@ moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches))
 # Node calibrations provide information about the ages of the MRCA.
 
 # The MRCAs of the following clades are calibrated.
-#clade_0 = clade("T1","T2")
-#clade_1 = clade("T14","T15")
-clade_Bombus <- clade("Bombus_impatiens","Bombus_terrestris")
-clade_Chalcidoidea <- clade("Trichogramma_brassicae","Trichogramma_pretiosum","Anagyrus_pseudococci","Leptomastidea_abnormis","Copidosoma_floridanum","Copidosoma_sp","Encarsia_formosa","Eretmocerus_eremicus","Ormyrus_nitidulus","Ormyrus_pomaceus","Torymus_auratus","Torymus_geranii","Torymus_flavipes","Torymus_sinensis","Ceratosolen_corneri","Ceratosolen_marchali","Ceratosolen_solmsi","Megastigmus_dorsalis","Megastigmus_stigmatizans","Eurytoma_adleriae","Eurytoma_brunniventris","Eupelmus_annulatus","Eupelmus_azureus","Eupelmus_kiefferi","Eupelmus_urozonus","Cecidostiba_fungosa","Cecidostiba_semifascia","Nasonia_giraulti","Nasonia_longicornis","Nasonia_vitripennis","Trichomalopsis_sarcophagae")
-clade_Braconidae <- clade("Aphidius_colemani","Diachasma_alloeum","Psyttalia_concolor","Psyttalia_lounsbury","Fopius_arisanus","Cotesia_vestalis","Microplitis_demolitor","Macrocentrus_cingulum","Meteorus_cinctellus","Meteorus_colon_M","Meteorus_colon_F")
-clade_Cynipoidea <- clade("Ganaspis_brasiliensis","Ganaspis_ganaspis","Leptopilina_boulardi","Leptopilina_clavipes","Leptopilina_heterotoma","Synergus_japonicus","Synergus_umbraculus")
-#tmrca_clade_Cynipoidea := tmrca(timetree, clade_Cynipoidea)
-clade_Hymenoptera <- clade("Athalia_rosae","Neodiprion_lecontei","Neodiprion_pinetum","Cephus_cinctus","Orussus_abietinus","Ganaspis_brasiliensis","Ganaspis_ganaspis","Leptopilina_boulardi","Leptopilina_clavipes","Leptopilina_heterotoma","Synergus_japonicus","Synergus_umbraculus","Platygaster_equestris","Platygaster_orseoliae","Trissolcus_brochymenae","Trissolcus_japonicus","Trichopria_sp_970989","Trichogramma_brassicae","Trichogramma_pretiosum","Anagyrus_pseudococci","Leptomastidea_abnormis","Copidosoma_floridanum","Copidosoma_sp","Encarsia_formosa","Eretmocerus_eremicus","Ormyrus_nitidulus","Ormyrus_pomaceus","Torymus_auratus","Torymus_geranii","Torymus_flavipes","Torymus_sinensis","Ceratosolen_corneri","Ceratosolen_marchali","Ceratosolen_solmsi","Megastigmus_dorsalis","Megastigmus_stigmatizans","Eurytoma_adleriae","Eurytoma_brunniventris","Eupelmus_annulatus","Eupelmus_azureus","Eupelmus_kiefferi","Eupelmus_urozonus","Cecidostiba_fungosa","Cecidostiba_semifascia","Nasonia_giraulti","Nasonia_longicornis","Nasonia_vitripennis","Trichomalopsis_sarcophagae","Aphidius_colemani","Diachasma_alloeum","Psyttalia_concolor","Psyttalia_lounsbury","Fopius_arisanus","Cotesia_vestalis","Microplitis_demolitor","Macrocentrus_cingulum","Meteorus_cinctellus","Meteorus_colon_M","Meteorus_colon_F","Campopleginae","Venturia_canescens","Ophioninae_A","Ophioninae_B","Cremastinae_A","Cremastinae_B","Tryphoninae_A","Tryphoninae_B","Ichneumoninae_A","Ichneumoninae_B","Goniozus_legneri","Polistes_canadensis","Polistes_dominula","Apis_cerana","Apis_mellifera","Apis_dorsata","Apis_florea","Bombus_impatiens","Bombus_terrestris","Lepidotrigona_ventralis","Melipona_quadrifasciata","Eufriesea_mexicana","Euglossa_dilemma","Ceratina_australensis","Ceratina_calcarata","Habropoda_laboriosa","Megachile_rotundata","Osmia_bicornis","Dufourea_novaeangliae","Lasioglossum_albipes","Nomia_melanderi","Dinoponera_quadriceps","Harpegnathos_saltator","Ooceraea_biroi","Linepithema_humile","Pseudomyrmex_gracilis","Camponotus_floridanus","Cataglyphis_hispanica","Cataglyphis_niger","Formica_exsecta","Lasius_niger","Nylanderia_fulva","Pogonomyrmex_barbatus","Aphaenogaster_ashmeadi","Aphaenogaster_floridana","Aphaenogaster_fulva","Aphaenogaster_picea","Aphaenogaster_rudis","Aphaenogaster_miamiana","Crematogaster_levior","Temnothorax_curvispinosus","Temnothorax_longispinosus","Vollenhovia_emeryi","Monomorium_pharaonis","Solenopsis_fugax","Solenopsis_invicta","Wasmannia_auropunctata","Cyphomyrmex_costatus","Trachymyrmex_zeteki","Trachymyrmex_cornetzi","Trachymyrmex_septentrionalis","Acromyrmex_echinatior","Atta_cephalotes","Atta_colombica","Atta_texana")
-#tmrca_clade_Hymenoptera := tmrca(timetree, clade_Hymenoptera)
+clade_braconidea_1 <- clade("MdENV","CcENV")
+clade_braconidea_2 <- clade("MdENV","CcENV","Chelonus_insularis","CiENV","TnENV","PhENV")
 
-# Clade Bombus
-tmrca_clade_Bombus := tmrca(psi, clade_Bombus)
-obs_age_clade_Bombus~ dnExponential(1.0, offset = - tmrca_clade_Bombus)
-obs_age_clade_Bombus.clamp(-17.0)
+# Clade Braconidea 1
+tmrca_clade_braconidea_1 := tmrca(psi, clade_braconidea_1)
+obs_age_clade_braconidea_1~ dnExponential(1.0, offset = - tmrca_clade_braconidea_1)
+obs_age_clade_braconidea_1.clamp(-87.0) #[87 +- 82;92]
 
-# Clade Chaclidoidea
-tmrca_clade_Chalcidoidea := tmrca(psi, clade_Chalcidoidea)
-obs_age_clade_Chalcidoidea~ dnExponential(1.0, offset = - tmrca_clade_Chalcidoidea)
-obs_age_clade_Chalcidoidea.clamp(-130.0)
+# Clade Braconidea 2
+tmrca_clade_braconidea_2 := tmrca(psi, clade_braconidea_2)
+obs_age_clade_braconidea_2~ dnExponential(1.0, offset = - tmrca_clade_braconidea_2)
+obs_age_clade_braconidea_2.clamp(-103.0) #[103 +- 98.6;107.4]
 
-# Clade Braconidae
-tmrca_clade_Braconidae := tmrca(psi, clade_Braconidae)
-obs_age_clade_Braconidae~ dnExponential(1.0, offset = - tmrca_clade_Braconidae)
-obs_age_clade_Braconidae.clamp(-99.0)
-
-# Clade Cynipoidea
-tmrca_clade_Cynipoidea := tmrca(psi, clade_Cynipoidea)
-obs_age_clade_Cynipoidea~ dnExponential(1.0, offset = - tmrca_clade_Cynipoidea)
-obs_age_clade_Cynipoidea.clamp(-78.5)
-
-# Clade Hymenoptera
-tmrca_clade_Hymenoptera := tmrca(psi, clade_Hymenoptera)
-obs_age_clade_Hymenoptera~ dnExponential(1.0, offset = - tmrca_clade_Hymenoptera)
-obs_age_clade_Hymenoptera.clamp(-226.4)
 
 #####################################
 ## Posterior Means and Variances####
