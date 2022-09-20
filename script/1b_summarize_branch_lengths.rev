@@ -7,9 +7,8 @@
 # Options.
 
 # Output directory.
-outdir="/beegfs/data/bguinet/these/Rev_datation_analysis/output_speed/"
+outdir="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"
 # File including trees obtained in step 1a.
-#tree_file="Concatenated_aligned_busco_sampled_10.fasta.trees"
 tree_file="Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees"
 
 #First, we specify the name of the file containing the trees, and the amount of thinning we apply (thinning = 5 means that we take every fifth tree):
