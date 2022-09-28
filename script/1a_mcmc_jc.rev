@@ -57,9 +57,6 @@ seq ~ dnPhyloCTMC(tree=psi, Q=Q, type="AA")
 seq.clamp(data)
 
 
-#seq ~ dnPhyloCTMC(tree=psi, Q=Q, type="DNA")
-#seq.clamp(data)
-
 ################################################################################
 # Analysis.
 
