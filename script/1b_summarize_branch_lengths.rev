@@ -9,8 +9,8 @@
 # Output directory.
 outdir="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"
 # File including trees obtained in step 1a.
-tree_file="Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees"
 
+tree_file="Virus_concatenated_alignment.nxs.trees"
 #First, we specify the name of the file containing the trees, and the amount of thinning we apply (thinning = 5 means that we take every fifth tree):
 # Only use every nth tree to calculate the posterior means and variances.
 thinning = 5
