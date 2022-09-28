@@ -1,5 +1,7 @@
 #Inference of the Posterior Distributions of the Branch Lengths
 
+
+# path to rb executable : /beegfs/data/bguinet/TOOLS/revbayes/projects/cmake/rb 
 # Please execute the following command to perform Bayesian inference of the posterior distributions of branch-length trees using a GL substitution model on a single alignment with a fixed tree topology.
 # The Markov chain Monte Carlo (MCMC) algorithm runs for 30000 iterations. 
 # It uses the alignment data/alignment.fasta, and the branch-length tree data/substitution.tree.
@@ -13,7 +15,7 @@ mcmc_burnin = 5000
 num_generations = 100000
 data_dir = "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/data/"
 aln_file = "Virus_concatenated_alignment.nxs"
-tree_file = "Phylogenybusco_constrain_complet_name.nwk"
+tree_file = "Virus_concatenated_phylogeny.nwk"
 
 ################################################################################
 # Sequence data.
