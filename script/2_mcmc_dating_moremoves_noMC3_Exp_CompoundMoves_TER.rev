@@ -9,6 +9,8 @@ mean_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/ou
 var_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees.trees_varBL.nex"
 out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
 
+outdir="/beegfs/data/bguinet/Cynipoidea_project/Viral_datation_revbayes/output/"
+
 ################################################################################
 # Options.
 
@@ -290,8 +292,8 @@ map_file_name = trees_base_name + "_map.tree"
 checkpoint_file_name = "Dating_analysis2/output/checkpoint_" + out_bn
 
 
-monitors.append(mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+".log",printgen=10, separator = TAB))
-monitors.append(mnStochasticVariable(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnModel(filename=outdir+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename=outdir+out_bn+"_Stoch.log",printgen=10))
 monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
 
 # Add some random age monitors.
