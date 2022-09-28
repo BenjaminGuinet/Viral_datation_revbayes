@@ -5,14 +5,8 @@
 
 # We assume we run the script from the Hymenoptera_Bayesian-analysis folder
 
-#time_tree_file="data/time.tree" #Only to check the accuracy of the analysis in the tutorial
-#time_tree_file="/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_10.fasta.tree"
-
-
-time_tree_file="Dating_analysis2/script/TimeTree_mcmc_10.tree"
-
-mean_tree_file="Dating_analysis2/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_meanBL.nex"
-var_tree_file="Dating_analysis2/output/Concatenated_aligned_busco_seqs3_constrain_complet_name_SNPs_sampled_20000.fasta.trees_varBL.nex"
+mean_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees.trees_meanBL.nex"
+var_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees.trees_varBL.nex"
 out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
 
 ################################################################################
@@ -45,11 +39,6 @@ taxa <- tree.taxa()
 
 ################################################################################
 # Tree model.
-
-#birth_rate ~ dnExp(1)
-#moves.append(mvScale(birth_rate, lambda=1.0, tune=true, weight=3.0))
-
-
 
 ##Diversification
 #Diversification (d) is the speciation rate (λ) minus the extinction rate (μ): d=λ−μ
@@ -127,8 +116,6 @@ obs_age_clade_braconidea_2.clamp(-103.0) #[103 +- 98.6;107.4]
 ## Posterior Means and Variances####
 ###################################
 
-#mean_tree <- readTrees(mean_tree_file)[1]
-#var_tree <- readTrees(var_tree_file)[1]
 mean_tree <- readTrees(mean_tree_file, treetype="clock")[1]
 var_tree <- readTrees(var_tree_file, treetype="clock")[1]
 
@@ -213,7 +200,6 @@ for (i in n_branches:1) {
   }
   moves.append(mvScaleBactrian(branch_rates[i], lambda=0.5, weight=1.0,tune=true))
 }
-
 
 # Some compound moves
 up_down_move = mvUpDownScale(weight=50.0)
@@ -304,8 +290,8 @@ map_file_name = trees_base_name + "_map.tree"
 checkpoint_file_name = "Dating_analysis2/output/checkpoint_" + out_bn
 
 
-monitors.append(mnModel(filename="Dating_analysis2/output/"+out_bn+".log",printgen=10, separator = TAB))
-monitors.append(mnStochasticVariable(filename="Dating_analysis2/output/"+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+"_Stoch.log",printgen=10))
 monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
 
 # Add some random age monitors.
