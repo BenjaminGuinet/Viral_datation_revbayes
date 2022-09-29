@@ -12,7 +12,7 @@
 # Bayesian inference of branch lengths using a GL substitution model
 # on a single alignment, with a fixed tree topology.
 mcmc_burnin = 5000
-num_generations = 100000
+num_generations = 20000  # enough to acheave convergence
 data_dir = "/beegfs/data/bguinet/Cynipoidea_project/Viral_datation_revbayes/data/"
 aln_file = "Virus_concatenated_alignment.nxs"
 tree_file = "Virus_concatenated_phylogeny.nwk"
