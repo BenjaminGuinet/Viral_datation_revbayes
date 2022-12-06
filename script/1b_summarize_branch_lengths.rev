@@ -7,7 +7,7 @@
 # Options.
 
 # Output directory.
-outdir="/beegfs/data/bguinet/Cynipoidea_project/Viral_datation_revbayes/output/"
+outdir="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"
 # File including trees obtained in step 1a.
 
 tree_file="Virus_concatenated_alignment.nxs.trees"
