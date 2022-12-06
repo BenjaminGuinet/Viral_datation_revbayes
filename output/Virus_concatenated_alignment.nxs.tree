@@ -1,0 +1,57 @@
+#NEXUS
+
+	Begin taxa;
+	Dimensions ntax=46;
+	Taxlabels
+		AcMNPV
+		AmFV
+		ApENV
+		BtENV
+		CcENV
+		CcFV1
+		CcFV2
+		Chelonus_insularis
+		CiENV
+		CpV
+		CuniNPV
+		DFV
+		DhNV
+		DnENV
+		DoEFV
+		EbENV
+		EfFV
+		FaENV
+		GbNV
+		GpSGHV
+		HzNV1
+		LbEFV
+		LbFV
+		LcEFV
+		LdMNPV
+		LhEFV
+		LhFV
+		MdENV
+		MdSGHV
+		MsENV
+		NeseNPV
+		NlENV
+		OrNV
+		PcFV
+		PhENV
+		PmNV
+		PoEFV
+		PoFV
+		RhEFV
+		ThEFV
+		TnENV
+		ToNV
+		TrEFV
+		VcENV
+		WSSV
+		tom
+		;
+End;
+
+Begin trees;
+tree TREE1 = [&R]((((((((((((LcEFV[&index=36]:0.070008[&brlen_95%_HPD={0.061646,0.078776}],LhEFV[&index=35]:0.107326[&brlen_95%_HPD={0.0967,0.118005}])[&index=47,posterior=1.000000]:0.038344[&brlen_95%_HPD={0.03098,0.045222}],LbEFV[&index=37]:0.106512[&brlen_95%_HPD={0.095582,0.116864}])[&index=48,posterior=1.000000]:0.028980[&brlen_95%_HPD={0.021907,0.035731}],(RhEFV[&index=34]:0.068714[&brlen_95%_HPD={0.060226,0.077647}],ThEFV[&index=33]:0.082728[&brlen_95%_HPD={0.072999,0.091722}])[&index=49,posterior=1.000000]:0.049962[&brlen_95%_HPD={0.041484,0.057779}])[&index=50,posterior=1.000000]:0.060893[&brlen_95%_HPD={0.048684,0.073358}],TrEFV[&index=32]:0.140319[&brlen_95%_HPD={0.125463,0.155522}])[&index=51,posterior=1.000000]:0.363754[&brlen_95%_HPD={0.335886,0.395595}],(DFV[&index=39]:0.006265[&brlen_95%_HPD={0.003214,0.008939}],LhFV[&index=38]:0.002732[&brlen_95%_HPD={0.000386,0.004972}])[&index=52,posterior=1.000000]:0.609982[&brlen_95%_HPD={0.575751,0.64049}])[&index=53,posterior=1.000000]:0.116026[&brlen_95%_HPD={0.092989,0.140129}],LbFV[&index=31]:0.654928[&brlen_95%_HPD={0.622095,0.686472}])[&index=54,posterior=1.000000]:0.170289[&brlen_95%_HPD={0.147138,0.196798}],((((PoEFV[&index=42]:0.084146[&brlen_95%_HPD={0.068172,0.100574}],PoFV[&index=41]:0.070147[&brlen_95%_HPD={0.055599,0.08624}])[&index=55,posterior=1.000000]:0.689019[&brlen_95%_HPD={0.652404,0.72884}],DoEFV[&index=43]:0.620153[&brlen_95%_HPD={0.586328,0.658818}])[&index=56,posterior=1.000000]:0.127400[&brlen_95%_HPD={0.100141,0.153177}],(CcFV1[&index=45]:0.675470[&brlen_95%_HPD={0.637675,0.71356}],CcFV2[&index=44]:0.589931[&brlen_95%_HPD={0.5538,0.625184}])[&index=57,posterior=1.000000]:0.450070[&brlen_95%_HPD={0.412688,0.488039}])[&index=58,posterior=1.000000]:0.062567[&brlen_95%_HPD={0.040912,0.081776}],PcFV[&index=40]:0.808054[&brlen_95%_HPD={0.770526,0.84572}])[&index=59,posterior=1.000000]:0.093844[&brlen_95%_HPD={0.071945,0.11629}])[&index=60,posterior=1.000000]:0.122849[&brlen_95%_HPD={0.094447,0.151445}],EfFV[&index=30]:1.028183[&brlen_95%_HPD={0.976543,1.07509}])[&index=61,posterior=1.000000]:0.213626[&brlen_95%_HPD={0.171186,0.253858}],(GpSGHV[&index=29]:0.641806[&brlen_95%_HPD={0.587827,0.688227}],MdSGHV[&index=28]:0.775291[&brlen_95%_HPD={0.724881,0.825459}])[&index=62,posterior=1.000000]:0.651517[&brlen_95%_HPD={0.594002,0.708507}])[&index=63,posterior=1.000000]:0.155759[&brlen_95%_HPD={0.098402,0.207594}],AmFV[&index=46]:1.390963[&brlen_95%_HPD={1.28488,1.49214}])[&index=64,posterior=1.000000]:0.063347[&brlen_95%_HPD={0.000575,0.118612}],(((((((((Chelonus_insularis[&index=24]:0.021915[&brlen_95%_HPD={0.011723,0.033049}],CiENV[&index=23]:0.073617[&brlen_95%_HPD={0.050134,0.097151}])[&index=65,posterior=1.000000]:0.214426[&brlen_95%_HPD={0.191218,0.237654}],PhENV[&index=22]:0.244847[&brlen_95%_HPD={0.2227,0.269521}])[&index=66,posterior=1.000000]:0.106196[&brlen_95%_HPD={0.083448,0.128249}],(CcENV[&index=20]:0.301457[&brlen_95%_HPD={0.254707,0.350586}],MdENV[&index=21]:0.224806[&brlen_95%_HPD={0.194585,0.255999}])[&index=67,posterior=1.000000]:0.068378[&brlen_95%_HPD={0.041119,0.094458}])[&index=68,posterior=1.000000]:0.111873[&brlen_95%_HPD={5.6e-05,0.308929}],TnENV[&index=19]:0.030997[&brlen_95%_HPD={2e-06,0.091925}])[&index=69,posterior=1.000000]:0.387141[&brlen_95%_HPD={0.180245,0.536198}],((DhNV[&index=27]:0.495659[&brlen_95%_HPD={0.454064,0.536814}],PmNV[&index=26]:0.561340[&brlen_95%_HPD={0.518511,0.603569}])[&index=70,posterior=1.000000]:0.327814[&brlen_95%_HPD={0.286418,0.370773}],HzNV1[&index=25]:0.754101[&brlen_95%_HPD={0.704691,0.805671}])[&index=71,posterior=1.000000]:0.138281[&brlen_95%_HPD={0.100394,0.173548}])[&index=72,posterior=1.000000]:0.149057[&brlen_95%_HPD={0.112073,0.184782}],ToNV[&index=18]:0.758103[&brlen_95%_HPD={0.701829,0.80981}])[&index=73,posterior=1.000000]:0.088666[&brlen_95%_HPD={0.053379,0.128905}],EbENV[&index=17]:0.768333[&brlen_95%_HPD={0.702857,0.83708}])[&index=74,posterior=1.000000]:0.190363[&brlen_95%_HPD={0.14595,0.234802}],((((((OrNV[&index=10]:0.174070[&brlen_95%_HPD={0.152865,0.194748}],tom[&index=9]:0.184241[&brlen_95%_HPD={0.162524,0.205263}])[&index=75,posterior=1.000000]:0.348529[&brlen_95%_HPD={0.319158,0.381232}],FaENV[&index=8]:0.515040[&brlen_95%_HPD={0.473742,0.554642}])[&index=76,posterior=1.000000]:0.070828[&brlen_95%_HPD={0.049322,0.093424}],(NlENV[&index=12]:0.497929[&brlen_95%_HPD={0.459318,0.534694}],VcENV[&index=11]:0.485645[&brlen_95%_HPD={0.447524,0.525009}])[&index=77,posterior=1.000000]:0.099293[&brlen_95%_HPD={0.072341,0.124708}])[&index=78,posterior=1.000000]:0.085281[&brlen_95%_HPD={0.060772,0.111959}],BtENV[&index=7]:0.703968[&brlen_95%_HPD={0.649803,0.754432}])[&index=79,posterior=1.000000]:0.100794[&brlen_95%_HPD={0.072016,0.131085}],((ApENV[&index=13]:0.225700[&brlen_95%_HPD={0.162032,0.289277}],DnENV[&index=14]:0.155704[&brlen_95%_HPD={0.109128,0.208448}])[&index=80,posterior=1.000000]:0.198586[&brlen_95%_HPD={0.144704,0.253808}],MsENV[&index=15]:0.599286[&brlen_95%_HPD={0.549756,0.652475}])[&index=81,posterior=1.000000]:0.125704[&brlen_95%_HPD={0.084858,0.167944}])[&index=82,posterior=1.000000]:0.147121[&brlen_95%_HPD={0.113736,0.181359}],GbNV[&index=16]:0.674570[&brlen_95%_HPD={0.62177,0.724935}])[&index=83,posterior=1.000000]:0.352744[&brlen_95%_HPD={0.308874,0.399542}])[&index=84,posterior=1.000000]:0.371387[&brlen_95%_HPD={0.323563,0.422591}],((((AcMNPV[&index=3]:0.369566[&brlen_95%_HPD={0.338567,0.402227}],LdMNPV[&index=2]:0.370862[&brlen_95%_HPD={0.338537,0.403658}])[&index=85,posterior=1.000000]:0.197160[&brlen_95%_HPD={0.167082,0.230506}],CpV[&index=4]:0.511518[&brlen_95%_HPD={0.471317,0.553716}])[&index=86,posterior=1.000000]:0.250406[&brlen_95%_HPD={0.208122,0.292121}],NeseNPV[&index=5]:0.688749[&brlen_95%_HPD={0.635694,0.747463}])[&index=87,posterior=1.000000]:0.263953[&brlen_95%_HPD={0.21346,0.320134}],CuniNPV[&index=6]:0.976763[&brlen_95%_HPD={0.905349,1.04868}])[&index=88,posterior=1.000000]:0.497048[&brlen_95%_HPD={0.432935,0.555495}])[&index=89,posterior=1.000000]:0.101695[&brlen_95%_HPD={0.041025,0.164348}])[&index=90,posterior=1.000000]:0.929924[&brlen_95%_HPD={0.027258,1.75664}],WSSV[&index=1]:0.928384[&brlen_95%_HPD={0.015284,1.77519}])[&index=91,posterior=1.000000]:0.000000;
+End;
