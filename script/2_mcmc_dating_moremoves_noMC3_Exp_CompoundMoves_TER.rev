@@ -5,11 +5,11 @@
 
 # We assume we run the script from the Hymenoptera_Bayesian-analysis folder
 
-mean_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees.trees_meanBL.nex"
-var_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees.trees_varBL.nex"
-out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
+time_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.tree"
 
-outdir="/beegfs/data/bguinet/Cynipoidea_project/Viral_datation_revbayes/output/"
+mean_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees_meanBL.nex"
+var_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees_varBL.nex"
+out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
 
 ################################################################################
 # Options.
@@ -41,6 +41,11 @@ taxa <- tree.taxa()
 
 ################################################################################
 # Tree model.
+
+#birth_rate ~ dnExp(1)
+#moves.append(mvScale(birth_rate, lambda=1.0, tune=true, weight=3.0))
+
+
 
 ##Diversification
 #Diversification (d) is the speciation rate (λ) minus the extinction rate (μ): d=λ−μ
@@ -100,24 +105,63 @@ moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches))
 # Node calibrations provide information about the ages of the MRCA.
 
 # The MRCAs of the following clades are calibrated.
-clade_braconidea_1 <- clade("MdENV","CcENV")
-clade_braconidea_2 <- clade("MdENV","CcENV","Chelonus_insularis","CiENV","TnENV","PhENV")
+
 
 # Clade Braconidea 1
+clade_braconidea_1 <- clade("MdENV","CcENV")
 tmrca_clade_braconidea_1 := tmrca(psi, clade_braconidea_1)
 obs_age_clade_braconidea_1~ dnExponential(1.0, offset = - tmrca_clade_braconidea_1)
 obs_age_clade_braconidea_1.clamp(-87.0) #[87 +- 82;92]
 
 # Clade Braconidea 2
+clade_braconidea_2 <- clade("MdENV","CcENV","Chelonus_insularis","CiENV","TnENV","PhENV")
 tmrca_clade_braconidea_2 := tmrca(psi, clade_braconidea_2)
 obs_age_clade_braconidea_2~ dnExponential(1.0, offset = - tmrca_clade_braconidea_2)
 obs_age_clade_braconidea_2.clamp(-103.0) #[103 +- 98.6;107.4]
+
+# Clade Cynipoidea 1
+clade_cynipoidea_1 <- clade("LcEFV","LhEFV","LbEFV")
+# age estimated in blaimer et al : [57 +- 38.7-77.1]
+tmrca_clade_cynipoidea_1 := tmrca(psi, clade_cynipoidea_1)
+min_age_cynipoidea_1 <- 38.7
+max_age_cynipoidea_1 <- 77.1
+width_age_prior_cynipoidea_1 <- (max_age_cynipoidea_1 - min_age_cynipoidea_1)/2.0
+mean_age_prior_cynipoidea_1 <- min_age_cynipoidea_1 + width_age_prior_cynipoidea_1
+obs_age_clade_cynipoidea_1 ~ dnUniform(tmrca_clade_cynipoidea_1 - width_age_prior_cynipoidea_1, tmrca_clade_cynipoidea_1 + width_age_prior_cynipoidea_1)
+obs_age_clade_cynipoidea_1.clamp(mean_age_prior_cynipoidea_1)
+
+
+# Clade Cynipoidea 2
+clade_cynipoidea_2 <- clade("RhEFV","ThEFV")
+# age estimated in blaimer et al : [40.1 +- 22.5-58.8]
+tmrca_clade_cynipoidea_2 := tmrca(psi, clade_cynipoidea_2)
+min_age_cynipoidea_2 <- 22.5 
+max_age_cynipoidea_2 <- 58.8
+width_age_prior_cynipoidea_2 <- (max_age_cynipoidea_2-min_age_cynipoidea_2)/2.0
+mean_age_prior_cynipoidea_2 <- min_age_cynipoidea_2 + width_age_prior_cynipoidea_2
+obs_age_clade_cynipoidea_2 ~ dnUniform(tmrca_clade_cynipoidea_2 - width_age_prior_cynipoidea_2, tmrca_clade_cynipoidea_2 + width_age_prior_cynipoidea_2)
+obs_age_clade_cynipoidea_2.clamp(mean_age_prior_cynipoidea_2)
+
+
+# Clade Cynipoidea 3
+clade_cynipoidea_3 <- clade("LcEFV","LhEFV","LbEFV","RhEFV","ThEFV")
+# age estimated in blaimer et al : [76.4 +- 55.5-100.1]
+tmrca_clade_cynipoidea_3 := tmrca(psi, clade_cynipoidea_3)
+min_age_cynipoidea_3 <- 55.5
+max_age_cynipoidea_3 <- 100.1
+width_age_prior_cynipoidea_3 <- (max_age_cynipoidea_3-min_age_cynipoidea_3)/2.0
+mean_age_prior_cynipoidea_3 <- min_age_cynipoidea_3 + width_age_prior_cynipoidea_3
+obs_age_clade_cynipoidea_3 ~ dnUniform(tmrca_clade_cynipoidea_3 - width_age_prior_cynipoidea_3, tmrca_clade_cynipoidea_3 + width_age_prior_cynipoidea_3)
+obs_age_clade_cynipoidea_3.clamp(mean_age_prior_cynipoidea_3)
+
 
 
 #####################################
 ## Posterior Means and Variances####
 ###################################
 
+#mean_tree <- readTrees(mean_tree_file)[1]
+#var_tree <- readTrees(var_tree_file)[1]
 mean_tree <- readTrees(mean_tree_file, treetype="clock")[1]
 var_tree <- readTrees(var_tree_file, treetype="clock")[1]
 
@@ -203,6 +247,7 @@ for (i in n_branches:1) {
   moves.append(mvScaleBactrian(branch_rates[i], lambda=0.5, weight=1.0,tune=true))
 }
 
+
 # Some compound moves
 up_down_move = mvUpDownScale(weight=50.0)
 up_down_move.addVariable(branch_rates,TRUE)
@@ -286,14 +331,14 @@ if (debug == true) {
   print(ages_psi)
 }
 
-trees_base_name = "Dating_analysis2/output/" + out_bn
+trees_base_name = "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/" + out_bn
 trees_file_name = trees_base_name + ".trees"
 map_file_name = trees_base_name + "_map.tree"
-checkpoint_file_name = "Dating_analysis2/output/checkpoint_" + out_bn
+checkpoint_file_name = "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/checkpoint_" + out_bn
 
 
-monitors.append(mnModel(filename=outdir+out_bn+".log",printgen=10, separator = TAB))
-monitors.append(mnStochasticVariable(filename=outdir+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+"_Stoch.log",printgen=10))
 monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
 
 # Add some random age monitors.
