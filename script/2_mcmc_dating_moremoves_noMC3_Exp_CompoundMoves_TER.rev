@@ -5,29 +5,33 @@
 
 # We assume we run the script from the Hymenoptera_Bayesian-analysis folder
 
-time_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.tree"
+path="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/"
 
-mean_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees_meanBL.nex"
-var_tree_file="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/Virus_concatenated_alignment.nxs.trees_varBL.nex"
+time_tree_file=path+"data/Concatenated_sequences_dsDNA.nxs.con.tre" # a remplacer par arbre mrbayes
+time_tree_file=path+"data/Virus_concatenated_phylogeny.nxs"
+#"output/Virus_concatenated_alignment.nxs.tree"
+
+mean_tree_file=path+"output/Virus_concatenated_alignment.nxs.trees_meanBL.nex"
+var_tree_file=path+"output/Virus_concatenated_alignment.nxs.trees_varBL.nex"
 out_bn="alignment.fasta.approx.dating_20000_moremoves_noMC3_Exp_CompoundMove_TER"
 
 ################################################################################
 # Options.
 
 # Show debug output?
-debug = false
+debug = true
 # Use relative constraints?
 constrain = false
 # Length of Markov chain.
-mcmc_length = 20000
-mcmc_burnin = 2000
+mcmc_length = 500000
+mcmc_burnin = 50000
 # The posterior branch length distribution of some branches of the first run has
 # zero variance. In this case, set the variance to the following value.
 var_min = 1e-6
 
 
 # Calibrate root
-root_time_real~ dnUniform(350, 550)
+root_time_real~ dnUniform(350, 700)
 
 ################################################################################
 # Variables.
@@ -80,6 +84,7 @@ if (!constrain) psi ~ dnBDP(lambda=birth_rate, mu=death_rate, rho=rho, rootAge=r
 if (constrain) psi ~  dnConstrainedNodeOrder(dnBDP(lambda=birth_rate, mu=0.0, rho=1.0, rootAge=root_time, samplingStrategy="uniform", condition="survival", taxa=taxa), constraints)
 
 #Fix topology
+tree.rescale(root_time_real/tree.rootAge())
 psi.setValue(tree)
 if (debug == true) {
   print("The original time tree:")
@@ -97,7 +102,7 @@ moves.append( mvTreeScale(tree=psi, rootAge=root_time_real, delta=1.0, tune=true
 moves.append( mvLayeredScaleProposal(tree=psi, lambda=0.1, tune=true, weight=0.5*n_branches))
 moves.append( mvSubtreeScale(psi, weight=0.5*n_branches) )
 moves.append( mvRootTimeSlideUniform(psi, root_time_real, weight=5.0) )
-moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches)) 
+moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches))
 
 ## Adding Node Calibrations
 
@@ -106,18 +111,30 @@ moves.append( mvNodeTimeScale(psi, lambda=0.1, weight=0.5*n_branches))
 
 # The MRCAs of the following clades are calibrated.
 
-
-# Clade Braconidea 1
-clade_braconidea_1 <- clade("MdENV","CcENV")
+# Clade braconidea 1
+# from murphy 
+# curve(dnorm(x, 87, 7), from=82, to=92)
+clade_braconidea_1 <- clade("MdENV","CcENV","TnENV")
 tmrca_clade_braconidea_1 := tmrca(psi, clade_braconidea_1)
-obs_age_clade_braconidea_1~ dnExponential(1.0, offset = - tmrca_clade_braconidea_1)
-obs_age_clade_braconidea_1.clamp(-87.0) #[87 +- 82;92]
+min_age_braconidea_1 <- 82
+max_age_braconidea_1 <- 92
+mean_age_braconidea_1 <- 87
+stdev_age_braconidea_1 <- 7
+obs_age_clade_braconidea_1 ~ dnNormal(mean=mean_age_braconidea_1,sd=stdev_age_braconidea_1,min=min_age_braconidea_1,max=max_age_braconidea_1)
+obs_age_clade_braconidea_1.clamp(mean_age_braconidea_1)
 
-# Clade Braconidea 2
+
+# Clade braconidea 2
+# from murphy 
+# curve(dnorm(x, 103.38, 7), from=103.38, to=107.79)
 clade_braconidea_2 <- clade("MdENV","CcENV","Chelonus_insularis","CiENV","TnENV","PhENV")
 tmrca_clade_braconidea_2 := tmrca(psi, clade_braconidea_2)
-obs_age_clade_braconidea_2~ dnExponential(1.0, offset = - tmrca_clade_braconidea_2)
-obs_age_clade_braconidea_2.clamp(-103.0) #[103 +- 98.6;107.4]
+min_age_braconidea_2 <- 98.97
+max_age_braconidea_2 <- 107.79
+mean_age_braconidea_2 <- 103.38
+stdev_age_braconidea_2 <- 7
+obs_age_clade_braconidea_2 ~ dnNormal(mean=mean_age_braconidea_2,sd=stdev_age_braconidea_2,min=min_age_braconidea_2,max=max_age_braconidea_2)
+obs_age_clade_braconidea_2.clamp(mean_age_braconidea_2)
 
 # Clade Cynipoidea 1
 # Node 197 in blaimer
@@ -144,7 +161,7 @@ obs_age_clade_cynipoidea_2 ~ dnNormal(mean=mean_age_cynipoidea_2,sd=stdev_age_cy
 obs_age_clade_cynipoidea_2.clamp(mean_age_cynipoidea_2)
 
 # Clade Cynipoidea 3
-# Node 196 in blaimer 
+# Node 196 in blaimer
 # curve(dnorm(x, 100*0.5546, 100*0.0795), from=100*0.3986, to=100*0.7167)
 dnNormal(mean=55.46,sd=7.95,min=39.86,max=71.67)
 clade_cynipoidea_3 <- clade("LcEFV","LhEFV","LbEFV","RhEFV","ThEFV")
@@ -157,7 +174,7 @@ obs_age_clade_cynipoidea_3 ~ dnNormal(mean=mean_age_cynipoidea_3,sd=stdev_age_cy
 obs_age_clade_cynipoidea_3.clamp(mean_age_cynipoidea_3)
 
 # Clade Cynipoidea 4
-# Node 195 in blaimer 
+# Node 195 in blaimer
 # curve(dnorm(x, 100*0.741, 100*0.0863), from=100*0.5525, to=100*0.914)
 clade_cynipoidea_4 <- clade("LcEFV","LhEFV","LbEFV","RhEFV","ThEFV","TrEFV")
 tmrca_clade_cynipoidea_4 := tmrca(psi, clade_cynipoidea_4)
@@ -210,8 +227,14 @@ i_right <- tree.child(tree.nnodes(),2)
 print(i_left)
 print(i_right)
 
+posterior_mean_bl[i_left] <- -1.0
+posterior_var_bl[i_left] <- -1.0
+posterior_mean_bl[i_right] <- -1.0
+posterior_var_bl[i_right] <- -1.0
+
 # Get posterior means and variances of all branches except the branches leading
 # to the root.
+print("Get posterior means and variances of all branches")
 for(i in 1:n_branches) {
   if(i != i_left && i != i_right) {
     posterior_mean_bl[i] <- mean_tree.branchLength(i)
@@ -343,14 +366,14 @@ if (debug == true) {
   print(ages_psi)
 }
 
-trees_base_name = "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/" + out_bn
+trees_base_name = path+"output/" + out_bn
 trees_file_name = trees_base_name + ".trees"
 map_file_name = trees_base_name + "_map.tree"
-checkpoint_file_name = "/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/checkpoint_" + out_bn
+checkpoint_file_name = path+"output/checkpoint_" + out_bn
 
 
-monitors.append(mnModel(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+".log",printgen=10, separator = TAB))
-monitors.append(mnStochasticVariable(filename="/beegfs/data/bguinet/Cynipoidea_project/Rev_datation_analysis/output/"+out_bn+"_Stoch.log",printgen=10))
+monitors.append(mnModel(filename=path+"output/"+out_bn+".log",printgen=10, separator = TAB))
+monitors.append(mnStochasticVariable(filename=path+"output/"+out_bn+"_Stoch.log",printgen=10))
 monitors.append(mnExtNewick(filename=trees_file_name, isNodeParameter=FALSE, printgen=10, separator = TAB, tree=psi, branch_rates))
 
 # Add some random age monitors.
@@ -374,4 +397,3 @@ map_tree = mapTree(treetrace, map_file_name)
 ## To continue
 # mymcmc.run(generation=mcmc_length,checkpointFile=checkpoint_file_name,checkpointInterval=10)
 # mymcmc.operatorSummary()
-
