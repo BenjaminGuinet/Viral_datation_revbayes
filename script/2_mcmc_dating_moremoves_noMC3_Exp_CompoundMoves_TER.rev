@@ -120,7 +120,7 @@ min_age_braconidea_1 <- 82
 max_age_braconidea_1 <- 92
 mean_age_braconidea_1 <- 87
 stdev_age_braconidea_1 <- 7
-obs_age_clade_braconidea_1 ~ dnNormal(mean=mean_age_braconidea_1,sd=stdev_age_braconidea_1,min=min_age_braconidea_1,max=max_age_braconidea_1)
+obs_age_clade_braconidea_1 ~ dnNormal(mean=tmrca_clade_braconidea_1,sd=stdev_age_braconidea_1,min=min_age_braconidea_1,max=max_age_braconidea_1)
 obs_age_clade_braconidea_1.clamp(mean_age_braconidea_1)
 
 
@@ -133,7 +133,7 @@ min_age_braconidea_2 <- 98.97
 max_age_braconidea_2 <- 107.79
 mean_age_braconidea_2 <- 103.38
 stdev_age_braconidea_2 <- 7
-obs_age_clade_braconidea_2 ~ dnNormal(mean=mean_age_braconidea_2,sd=stdev_age_braconidea_2,min=min_age_braconidea_2,max=max_age_braconidea_2)
+obs_age_clade_braconidea_2 ~ dnNormal(mean=tmrca_clade_braconidea_2,sd=stdev_age_braconidea_2,min=min_age_braconidea_2,max=max_age_braconidea_2)
 obs_age_clade_braconidea_2.clamp(mean_age_braconidea_2)
 
 # Clade Cynipoidea 1
@@ -145,7 +145,7 @@ min_age_cynipoidea_1 <- 11.19
 max_age_cynipoidea_1 <- 81.07
 mean_age_cynipoidea_1 <- 40.64
 stdev_age_cynipoidea_1 <- 8.21
-obs_age_clade_cynipoidea_1 ~ dnNormal(mean=mean_age_cynipoidea_1,sd=stdev_age_cynipoidea_1,min=min_age_cynipoidea_1,max=max_age_cynipoidea_1)
+obs_age_clade_cynipoidea_1 ~ dnNormal(mean=tmrca_clade_cynipoidea_1 ,sd=stdev_age_cynipoidea_1,min=min_age_cynipoidea_1,max=max_age_cynipoidea_1)
 obs_age_clade_cynipoidea_1.clamp(mean_age_cynipoidea_1)
 
 # Clade Cynipoidea 2
@@ -157,7 +157,7 @@ min_age_cynipoidea_2 <- 22.3
 max_age_cynipoidea_2 <- 55.4
 mean_age_cynipoidea_2 <- 38.86
 stdev_age_cynipoidea_2 <- 8.41
-obs_age_clade_cynipoidea_2 ~ dnNormal(mean=mean_age_cynipoidea_2,sd=stdev_age_cynipoidea_2,min=min_age_cynipoidea_2,max=max_age_cynipoidea_2)
+obs_age_clade_cynipoidea_2 ~ dnNormal(mean=tmrca_clade_cynipoidea_2,sd=stdev_age_cynipoidea_2,min=min_age_cynipoidea_2,max=max_age_cynipoidea_2)
 obs_age_clade_cynipoidea_2.clamp(mean_age_cynipoidea_2)
 
 # Clade Cynipoidea 3
@@ -170,7 +170,7 @@ min_age_cynipoidea_3 <- 39.86
 max_age_cynipoidea_3 <- 71.67
 mean_age_cynipoidea_3 <- 55.46
 stdev_age_cynipoidea_3 <- 7.95
-obs_age_clade_cynipoidea_3 ~ dnNormal(mean=mean_age_cynipoidea_3,sd=stdev_age_cynipoidea_3,min=min_age_cynipoidea_3,max=max_age_cynipoidea_3)
+obs_age_clade_cynipoidea_3 ~ dnNormal(mean=tmrca_clade_cynipoidea_3,sd=stdev_age_cynipoidea_3,min=min_age_cynipoidea_3,max=max_age_cynipoidea_3)
 obs_age_clade_cynipoidea_3.clamp(mean_age_cynipoidea_3)
 
 # Clade Cynipoidea 4
@@ -182,7 +182,7 @@ min_age_cynipoidea_4 <- 55.25
 max_age_cynipoidea_4 <- 91.4
 mean_age_cynipoidea_4 <- 74.1
 stdev_age_cynipoidea_4 <- 8.63
-obs_age_clade_cynipoidea_4 ~ dnNormal(mean=mean_age_cynipoidea_4,sd=stdev_age_cynipoidea_4,min=min_age_cynipoidea_4,max=max_age_cynipoidea_4)
+obs_age_clade_cynipoidea_4 ~ dnNormal(mean=tmrca_clade_cynipoidea_4,sd=stdev_age_cynipoidea_4,min=min_age_cynipoidea_4,max=max_age_cynipoidea_4)
 obs_age_clade_cynipoidea_4.clamp(mean_age_cynipoidea_4)
 
 #####################################
